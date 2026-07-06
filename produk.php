@@ -595,7 +595,7 @@ $breadcrumbs = [
     </footer>
 
     <!-- JavaScript Files -->
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=account-menu-2"></script>
     <script src="js/commerce.js"></script>
     
     <script>

@@ -454,7 +454,7 @@ function isAreaCalculatorCategory($category) {
     </footer>
 
     <!-- JavaScript Files -->
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=account-menu-2"></script>
     <script src="js/commerce.js"></script>
     <div class="confirm-modal-overlay" id="confirmLogoutOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmLogoutTitle" aria-hidden="true">
         <div class="confirm-modal">

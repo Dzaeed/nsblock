@@ -256,7 +256,8 @@ header.scrolled {
     transition: var(--transition);
 }
 
-.account-menu.active .account-menu-arrow {
+.account-menu.active .account-menu-arrow,
+.account-menu:focus-within .account-menu-arrow {
     transform: rotate(180deg);
 }
 
@@ -278,7 +279,8 @@ header.scrolled {
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
 }
 
-.account-menu.active .account-menu-dropdown {
+.account-menu.active .account-menu-dropdown,
+.account-menu:focus-within .account-menu-dropdown {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -3642,6 +3644,58 @@ footer {
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
     }
+}
+
+/* Final account dropdown normalization */
+.account-menu .account-menu-dropdown {
+    display: grid;
+    gap: 0.12rem;
+    overflow: hidden;
+}
+
+.account-menu .account-menu-summary {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: center;
+}
+
+.account-menu .account-menu-item,
+.account-menu button.account-menu-item,
+.account-menu a.account-menu-item {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.account-menu button.account-menu-item {
+    height: auto;
+    background: transparent;
+    box-shadow: none;
+}
+
+.account-menu .account-menu-item > i {
+    grid-column: 1;
+    justify-self: center;
+}
+
+.account-menu .account-menu-item > span:not(.cart-badge) {
+    grid-column: 2;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-menu .account-menu-item > .cart-badge {
+    grid-column: 3;
+    position: static !important;
+    top: auto;
+    right: auto;
+    margin-left: 0;
 }
 
 /* Print Styles */
