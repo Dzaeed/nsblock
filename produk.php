@@ -596,7 +596,7 @@ $breadcrumbs = [
 
     <!-- JavaScript Files -->
     <script src="js/script.js?v=account-menu-2"></script>
-    <script src="js/commerce.js"></script>
+    <script src="js/commerce.js?v=custom-confirm-v2"></script>
     
     <script>
         // Quantity selector functionality

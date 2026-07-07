@@ -201,6 +201,31 @@ $mode = isset($_GET['mode']) && $_GET['mode'] === 'register' ? 'register' : 'log
         .back-link:hover {
             color: #ffffff;
         }
+
+        .auth-row {
+            display: flex;
+            gap: 1rem;
+            width: min(100%, 480px);
+            justify-content: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .auth-row .auth-field {
+            flex: 1;
+            width: auto;
+            margin-bottom: 1.1rem;
+        }
+
+        @media (max-width: 480px) {
+            .auth-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .auth-row .auth-field {
+                width: 100%;
+                margin-bottom: 1.35rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -229,23 +254,27 @@ $mode = isset($_GET['mode']) && $_GET['mode'] === 'register' ? 'register' : 'log
                 <p class="auth-bottom-dialog">Don't have an account? <a href="?mode=register" data-auth-switch="register">Create one</a></p>
             </form>
 
-            <form id="registerForm" class="auth-form <?php echo $mode === 'register' ? 'active' : ''; ?>" action="<?php echo BASE_URL; ?>auth/register_action.php" method="POST">
+            <form id="registerForm" class="auth-form <?php echo $mode === 'register' ? 'active' : ''; ?>" action="<?php echo BASE_URL; ?>auth/register_action.php" method="POST" style="width: 100%;">
                 <h1 class="auth-title">Registrasi</h1>
-                <div class="auth-field">
-                    <label for="register_username">Username</label>
-                    <input type="text" id="register_username" name="username" placeholder="Masukkan username" minlength="3" required>
+                <div class="auth-row">
+                    <div class="auth-field">
+                        <label for="register_username">Username</label>
+                        <input type="text" id="register_username" name="username" placeholder="Username" minlength="3" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="register_email">Email</label>
+                        <input type="email" id="register_email" name="email" placeholder="Email address" required>
+                    </div>
                 </div>
-                <div class="auth-field">
-                    <label for="register_email">Email</label>
-                    <input type="email" id="register_email" name="email" placeholder="Masukkan email" required>
-                </div>
-                <div class="auth-field">
-                    <label for="register_password">Password</label>
-                    <input type="password" id="register_password" name="password" placeholder="Minimal 6 karakter" minlength="6" required>
-                </div>
-                <div class="auth-field">
-                    <label for="register_confirm_password">Konfirmasi Password</label>
-                    <input type="password" id="register_confirm_password" name="confirm_password" placeholder="Ulangi password" minlength="6" required>
+                <div class="auth-row">
+                    <div class="auth-field">
+                        <label for="register_password">Password</label>
+                        <input type="password" id="register_password" name="password" placeholder="Min. 6 karakter" minlength="6" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="register_confirm_password">Konfirmasi</label>
+                        <input type="password" id="register_confirm_password" name="confirm_password" placeholder="Ulangi password" minlength="6" required>
+                    </div>
                 </div>
                 <button type="submit" class="auth-button">Daftar</button>
                 <p class="auth-bottom-dialog">Already have an account? <a href="?mode=login" data-auth-switch="login">Login here</a></p>
