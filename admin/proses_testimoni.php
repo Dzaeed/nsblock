@@ -88,6 +88,74 @@ if (!is_numeric($id) || $id === 0) {
     .error { background: #e74c3c; color: #fff; }
     a { display: inline-block; margin-top: 20px; color: #3498db; text-decoration: none; font-weight: bold; }
     a:hover { text-decoration: underline; }
+    
+    /* Custom Confirmation Modal Styles */
+    .confirm-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 10, 10, 0.75);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    .confirm-modal-overlay.active {
+        display: flex;
+        opacity: 1;
+    }
+    .confirm-modal {
+        background: #fff;
+        padding: 25px;
+        border-radius: 20px;
+        max-width: 340px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        font-family: 'Poppins', sans-serif;
+    }
+    .confirm-modal h3 {
+        margin: 0 0 10px;
+        color: #e74c3c;
+        font-size: 1.3rem;
+    }
+    .confirm-modal p {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0 0 20px;
+        line-height: 1.5;
+    }
+    .confirm-modal-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    .confirm-modal-actions button {
+        margin: 0;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
+    .btn-secondary {
+        background: #e9ecef;
+        color: #495057;
+    }
+    .btn-secondary:hover {
+        background: #dee2e6;
+        transform: none;
+    }
+    .btn-danger {
+        background: #e74c3c;
+        color: #fff;
+    }
+    .btn-danger:hover {
+        background: #c0392b;
+        transform: none;
+    }
 </style>
 </head>
 <body>
@@ -96,10 +164,10 @@ if (!is_numeric($id) || $id === 0) {
 
     <?php if ($status === ''): ?>
         <p>ID Testimoni: <strong><?= htmlspecialchars($id) ?></strong></p>
-        <form method="POST">
+        <form method="POST" id="testimoniForm">
             <button type="submit" name="action" value="approve" class="approve">✅ Approve</button>
             <button type="submit" name="action" value="hide" class="hide">👁️ Hide</button>
-            <button type="submit" name="action" value="delete" class="delete" onclick="return confirm('Yakin mau hapus?');">🗑️ Delete</button>
+            <button type="button" id="deleteBtn" class="delete">🗑️ Delete</button>
         </form>
     <?php else: ?>
         <div class="message <?= $status === 'berhasil' ? 'success' : 'error' ?>">
@@ -109,5 +177,62 @@ if (!is_numeric($id) || $id === 0) {
 
     <a href="index.php#testimonials">← Kembali ke daftar testimoni</a>
 </div>
+
+<div class="confirm-modal-overlay" id="confirmDeleteOverlay">
+    <div class="confirm-modal">
+        <h3>Konfirmasi Hapus</h3>
+        <p>Yakin ingin menghapus testimoni ini?</p>
+        <div class="confirm-modal-actions">
+            <button type="button" class="btn-secondary" id="cancelBtn">Batal</button>
+            <button type="button" class="btn-danger" id="confirmBtn">Hapus</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var deleteBtn = document.getElementById('deleteBtn');
+    var overlay = document.getElementById('confirmDeleteOverlay');
+    var cancelBtn = document.getElementById('cancelBtn');
+    var confirmBtn = document.getElementById('confirmBtn');
+    var form = document.getElementById('testimoniForm');
+
+    if (deleteBtn && overlay && form) {
+        deleteBtn.addEventListener('click', function() {
+            overlay.style.display = 'flex';
+            setTimeout(function() {
+                overlay.classList.add('active');
+            }, 10);
+        });
+
+        var closeDialog = function() {
+            overlay.classList.remove('active');
+            setTimeout(function() {
+                overlay.style.display = 'none';
+            }, 200);
+        };
+
+        cancelBtn.addEventListener('click', closeDialog);
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeDialog();
+            }
+        });
+
+        confirmBtn.addEventListener('click', function() {
+            overlay.classList.remove('active');
+            setTimeout(function() {
+                overlay.style.display = 'none';
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'action';
+                hiddenInput.value = 'delete';
+                form.appendChild(hiddenInput);
+                form.submit();
+            }, 200);
+        });
+    }
+})();
+</script>
 </body>
 </html>

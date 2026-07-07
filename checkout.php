@@ -109,6 +109,6 @@ $current_user = isset($_SESSION['user_id']) ? getUserById($_SESSION['user_id']) 
     </div>
 
     <script src="js/script.js"></script>
-    <script src="js/commerce.js"></script>
+    <script src="js/commerce.js?v=custom-confirm-v2"></script>
 </body>
 </html>

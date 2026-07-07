@@ -5,6 +5,292 @@
     var currentPaymentOrderId = null;
     var proofDataUrl = '';
 
+    function injectConfirmStyles() {
+        if (document.getElementById('custom-confirm-styles')) return;
+        var style = document.createElement('style');
+        style.id = 'custom-confirm-styles';
+        style.textContent = 
+            '.confirm-modal-overlay {' +
+            '    position: fixed;' +
+            '    top: 0;' +
+            '    right: 0;' +
+            '    bottom: 0;' +
+            '    left: 0;' +
+            '    z-index: 99999;' +
+            '    display: none;' +
+            '    align-items: center;' +
+            '    justify-content: center;' +
+            '    background: rgba(10, 10, 10, 0.75);' +
+            '    padding: 1rem;' +
+            '    opacity: 0;' +
+            '    visibility: hidden;' +
+            '    pointer-events: none;' +
+            '    transition: opacity 0.2s ease, visibility 0.2s ease;' +
+            '}' +
+            '.confirm-modal-overlay.active {' +
+            '    display: flex;' +
+            '    opacity: 1;' +
+            '    visibility: visible;' +
+            '    pointer-events: auto;' +
+            '}' +
+            '.confirm-modal {' +
+            '    width: 100%;' +
+            '    max-width: 440px;' +
+            '    background: #ffffff;' +
+            '    border-radius: 24px;' +
+            '    box-shadow: 0 28px 70px rgba(15, 15, 15, 0.16);' +
+            '    border: none;' +
+            '    padding: 1.5rem;' +
+            '    position: relative;' +
+            '    overflow: hidden;' +
+            '    color: #333333;' +
+            '    font-family: "Poppins", sans-serif;' +
+            '}' +
+            '.confirm-modal-header {' +
+            '    display: flex;' +
+            '    justify-content: space-between;' +
+            '    gap: 1rem;' +
+            '    align-items: center;' +
+            '    margin-bottom: 1rem;' +
+            '}' +
+            '.confirm-modal-title-wrap {' +
+            '    display: flex;' +
+            '    gap: 0.9rem;' +
+            '    align-items: center;' +
+            '}' +
+            '.confirm-icon {' +
+            '    display: grid;' +
+            '    place-items: center;' +
+            '    width: 52px;' +
+            '    height: 52px;' +
+            '    border-radius: 16px;' +
+            '    background: rgba(237, 66, 69, 0.12);' +
+            '    color: #dc3545;' +
+            '    font-size: 1.2rem;' +
+            '}' +
+            '.confirm-modal-header h3 {' +
+            '    margin: 0;' +
+            '    font-size: 1.3rem;' +
+            '    color: #111111;' +
+            '}' +
+            '.confirm-modal-header p {' +
+            '    margin: 0.25rem 0 0;' +
+            '    color: #555555;' +
+            '    line-height: 1.5;' +
+            '    font-size: 0.85rem;' +
+            '}' +
+            '.confirm-close {' +
+            '    border: none;' +
+            '    background: transparent;' +
+            '    color: #999;' +
+            '    font-size: 1.65rem;' +
+            '    line-height: 1;' +
+            '    cursor: pointer;' +
+            '}' +
+            '.confirm-modal-body {' +
+            '    color: #555555;' +
+            '    padding: 0.75rem 0 1.25rem;' +
+            '    border-bottom: 1px solid rgba(0, 0, 0, 0.1);' +
+            '    font-size: 0.95rem;' +
+            '}' +
+            '.confirm-modal-body p {' +
+            '    margin: 0;' +
+            '}' +
+            '.confirm-modal-actions {' +
+            '    display: flex;' +
+            '    justify-content: flex-end;' +
+            '    gap: 0.75rem;' +
+            '    flex-wrap: wrap;' +
+            '    margin-top: 1.25rem;' +
+            '}' +
+            '.confirm-modal-actions .btn {' +
+            '    min-width: 100px;' +
+            '    padding: 0.6rem 1.2rem;' +
+            '    border-radius: 12px;' +
+            '    font-weight: 600;' +
+            '    cursor: pointer;' +
+            '    border: none;' +
+            '    font-size: 0.9rem;' +
+            '    transition: background-color 0.2s;' +
+            '}' +
+            '.confirm-modal-actions .btn-secondary {' +
+            '    background: #e9ecef;' +
+            '    color: #495057;' +
+            '}' +
+            '.confirm-modal-actions .btn-secondary:hover {' +
+            '    background: #dee2e6;' +
+            '}' +
+            '.confirm-modal-actions .btn-danger {' +
+            '    background: #dc3545;' +
+            '    color: #ffffff;' +
+            '}' +
+            '.confirm-modal-actions .btn-danger:hover {' +
+            '    background: #bd2130;' +
+            '}' +
+            'html[data-theme="dark"] .confirm-modal {' +
+            '    background: #1e1e1e;' +
+            '    color: #eeeeee;' +
+            '}' +
+            'html[data-theme="dark"] .confirm-modal-header h3 {' +
+            '    color: #ffffff;' +
+            '}' +
+            'html[data-theme="dark"] .confirm-modal-header p,' +
+            'html[data-theme="dark"] .confirm-modal-body {' +
+            '    color: #bbbbbb;' +
+            '    border-bottom-color: rgba(255, 255, 255, 0.1);' +
+            '}' +
+            'html[data-theme="dark"] .confirm-modal-actions .btn-secondary {' +
+            '    background: #333333;' +
+            '    color: #eeeeee;' +
+            '}' +
+            'html[data-theme="dark"] .confirm-modal-actions .btn-secondary:hover {' +
+            '    background: #444444;' +
+            '}' +
+            'html[data-theme="dark"] .confirm-icon {' +
+            '    background: rgba(237, 66, 69, 0.2);' +
+            '    color: #ff5f60;' +
+            '}';
+        document.head.appendChild(style);
+    }
+
+    function showCustomConfirmDialog(message, onConfirm, onCancel) {
+        injectConfirmStyles();
+
+        var overlay = document.createElement('div');
+        overlay.className = 'confirm-modal-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        
+        var modal = document.createElement('div');
+        modal.className = 'confirm-modal';
+        
+        var header = document.createElement('div');
+        header.className = 'confirm-modal-header';
+        
+        var titleWrap = document.createElement('div');
+        titleWrap.className = 'confirm-modal-title-wrap';
+        
+        var iconSpan = document.createElement('span');
+        iconSpan.className = 'confirm-icon';
+        iconSpan.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        
+        var titleTextWrap = document.createElement('div');
+        var h3 = document.createElement('h3');
+        h3.textContent = 'Konfirmasi';
+        var pSub = document.createElement('p');
+        pSub.textContent = 'Silakan konfirmasi pilihan Anda.';
+        
+        titleTextWrap.appendChild(h3);
+        titleTextWrap.appendChild(pSub);
+        titleWrap.appendChild(iconSpan);
+        titleWrap.appendChild(titleTextWrap);
+        
+        var closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'confirm-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.setAttribute('aria-label', 'Tutup konfirmasi');
+        
+        header.appendChild(titleWrap);
+        header.appendChild(closeBtn);
+        
+        var body = document.createElement('div');
+        body.className = 'confirm-modal-body';
+        var pBody = document.createElement('p');
+        pBody.textContent = message;
+        body.appendChild(pBody);
+        
+        var actions = document.createElement('div');
+        actions.className = 'confirm-modal-actions';
+        
+        var cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'btn btn-secondary';
+        cancelBtn.textContent = 'Batal';
+        
+        var confirmBtn = document.createElement('button');
+        confirmBtn.type = 'button';
+        confirmBtn.className = 'btn btn-danger';
+        confirmBtn.textContent = 'Ya, Lanjutkan';
+        
+        actions.appendChild(cancelBtn);
+        actions.appendChild(confirmBtn);
+        
+        modal.appendChild(header);
+        modal.appendChild(body);
+        modal.appendChild(actions);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        overlay.style.display = 'flex';
+        setTimeout(function() {
+            overlay.classList.add('active');
+        }, 10);
+        
+        function closeDialog() {
+            overlay.classList.remove('active');
+            setTimeout(function() {
+                if (overlay.parentNode) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+            }, 200);
+            if (typeof onCancel === 'function') {
+                onCancel();
+            }
+        }
+        
+        closeBtn.addEventListener('click', closeDialog);
+        cancelBtn.addEventListener('click', closeDialog);
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeDialog();
+            }
+        });
+        
+        confirmBtn.addEventListener('click', function() {
+            overlay.classList.remove('active');
+            setTimeout(function() {
+                if (overlay.parentNode) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+            }, 200);
+            if (typeof onConfirm === 'function') {
+                onConfirm();
+            }
+        });
+    }
+
+    window.showCustomConfirmDialog = showCustomConfirmDialog;
+
+    document.addEventListener('click', function(event) {
+        var target = event.target.closest('[data-confirm]');
+        if (!target) return;
+        
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        
+        var message = target.getAttribute('data-confirm');
+        var href = target.getAttribute('href');
+        var form = target.closest('form');
+        
+        showCustomConfirmDialog(message, function() {
+            if (href) {
+                window.location.href = href;
+            } else if (form) {
+                if (target.type === 'submit' || target.tagName === 'BUTTON') {
+                    if (target.name) {
+                        var hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = target.name;
+                        hiddenInput.value = target.value;
+                        form.appendChild(hiddenInput);
+                    }
+                    form.submit();
+                }
+            }
+        });
+    });
+
     function pageUrl(path) {
         return path;
     }
@@ -25,22 +311,6 @@
         if (!isGuestUser()) return true;
 
         notify(message || 'Silakan login atau registrasi terlebih dahulu untuk memesan.', 'error');
-        closePurchaseModal();
-        closeOverlay('cartOverlay');
-        closeOverlay('checkoutOverlay');
-        closeOverlay('ordersOverlay');
-
-        var authLink = document.querySelector('a[href$="auth/login.php"]');
-        if (authLink) {
-            window.setTimeout(function() {
-                authLink.click();
-            }, 150);
-        } else {
-            window.setTimeout(function() {
-                window.location.href = pageUrl('auth/login.php');
-            }, 700);
-        }
-
         return false;
     }
 
@@ -460,8 +730,16 @@
         if (index === -1) return;
 
         if (action === 'remove') {
-            if (!window.confirm('Yakin ingin menghapus item ini dari keranjang?')) return;
-            cart.splice(index, 1);
+            showCustomConfirmDialog('Yakin ingin menghapus item ini dari keranjang?', function() {
+                var cart = getCart();
+                var index = cart.findIndex(function(item) { return item.id === id; });
+                if (index !== -1) {
+                    cart.splice(index, 1);
+                    saveCart(cart);
+                    notify('Produk dihapus dari keranjang.');
+                }
+            });
+            return;
         } else if (action === 'increase') {
             if (cart[index].qty >= cart[index].stock) {
                 notify('Jumlah sudah mencapai stok tersedia.', 'error');
@@ -470,15 +748,29 @@
             cart[index].qty += 1;
             cart[index].totalPrice = cart[index].qty * Number(cart[index].price || 0);
         } else if (action === 'decrease') {
-            cart[index].qty -= 1;
-            if (cart[index].qty <= 0) {
-                if (!window.confirm('Jumlah menjadi 0. Hapus item dari keranjang?')) {
-                    cart[index].qty = 1;
-                    cart[index].totalPrice = cart[index].qty * Number(cart[index].price || 0);
-                    return;
-                }
-                cart.splice(index, 1);
+            var newQty = cart[index].qty - 1;
+            if (newQty <= 0) {
+                showCustomConfirmDialog('Jumlah menjadi 0. Hapus item dari keranjang?', function() {
+                    var cart = getCart();
+                    var index = cart.findIndex(function(item) { return item.id === id; });
+                    if (index !== -1) {
+                        cart.splice(index, 1);
+                        saveCart(cart);
+                        notify('Produk dihapus dari keranjang.');
+                    }
+                }, function() {
+                    var cart = getCart();
+                    var index = cart.findIndex(function(item) { return item.id === id; });
+                    if (index !== -1) {
+                        cart[index].qty = 1;
+                        cart[index].totalPrice = cart[index].qty * Number(cart[index].price || 0);
+                        saveCart(cart);
+                        notify('Jumlah produk diubah.');
+                    }
+                });
+                return;
             } else {
+                cart[index].qty = newQty;
                 cart[index].totalPrice = cart[index].qty * Number(cart[index].price || 0);
             }
         }
@@ -725,8 +1017,20 @@
         var orders = getOrders();
         var order = orders.find(function(item) { return item.id === id; });
         if (!order) return;
-        if (status === 'Dibatalkan' && !window.confirm('Yakin ingin membatalkan pesanan ini?')) {
-            renderAdminOrders();
+        if (status === 'Dibatalkan') {
+            showCustomConfirmDialog('Yakin ingin membatalkan pesanan ini?', function() {
+                var orders = getOrders();
+                var order = orders.find(function(item) { return item.id === id; });
+                if (order) {
+                    order.status = status;
+                    order.updatedAt = new Date().toISOString();
+                    saveOrders(orders);
+                    notify('Status pesanan diubah admin.');
+                    renderAdminOrders();
+                }
+            }, function() {
+                renderAdminOrders();
+            });
             return;
         }
         order.status = status;
@@ -736,10 +1040,12 @@
     }
 
     function deleteOrder(id) {
-        if (!window.confirm('Yakin ingin menghapus pesanan ini?')) return;
-        var orders = getOrders().filter(function(order) { return order.id !== id; });
-        saveOrders(orders);
-        notify('Pesanan berhasil dihapus.');
+        showCustomConfirmDialog('Yakin ingin menghapus pesanan ini?', function() {
+            var orders = getOrders().filter(function(order) { return order.id !== id; });
+            saveOrders(orders);
+            notify('Pesanan berhasil dihapus.');
+            renderAdminOrders();
+        });
     }
 
     function renderUserOrders() {
@@ -845,19 +1151,21 @@
 
         var clearCart = document.getElementById('clearCartBtn');
         if (clearCart) clearCart.addEventListener('click', function() {
-            if (getCart().length && window.confirm('Yakin ingin mengosongkan keranjang?')) {
-                saveCart([]);
-                notify('Keranjang dikosongkan.');
+            if (getCart().length) {
+                showCustomConfirmDialog('Yakin ingin mengosongkan keranjang?', function() {
+                    saveCart([]);
+                    notify('Keranjang dikosongkan.');
+                });
             }
         });
 
         var cancelCart = document.getElementById('cancelCartBtn');
         if (cancelCart) cancelCart.addEventListener('click', function() {
-            if (window.confirm('Yakin ingin membatalkan pesanan sebelum checkout?')) {
+            showCustomConfirmDialog('Yakin ingin membatalkan pesanan sebelum checkout?', function() {
                 saveCart([]);
                 closeOverlay('cartOverlay');
                 notify('Pesanan dibatalkan.');
-            }
+            });
         });
 
         var checkoutOpen = document.getElementById('checkoutOpenBtn');

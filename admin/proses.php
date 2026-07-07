@@ -20,8 +20,17 @@ function upload_image($file, $old_image = null) {
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     
     // Validasi format file
-    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
-        die("Maaf, hanya format JPG, JPEG, & PNG yang diperbolehkan.");
+    if ($imageFileType != "webp") {
+        die("Maaf, hanya format WebP yang diperbolehkan.");
+    }
+    
+    // Validasi konten file (MIME type / magic bytes)
+    // TODO(security): Validate magic bytes/MIME type for file content verification
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file["tmp_name"]);
+    finfo_close($finfo);
+    if ($mimeType !== 'image/webp') {
+        die("Maaf, file yang diupload bukan merupakan gambar WebP yang valid.");
     }
     
     // Hapus gambar lama jika ada

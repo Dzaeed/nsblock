@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
@@ -84,10 +84,9 @@ foreach ($testimonials as $testimonial) {
         <header class="topbar">
             <div class="topbar-left">
                 <div class="brand"><i class="fas fa-cube"></i> NSBLOCK Admin</div>
-                <a href="../index.php" class="dashboard-home-link">Beranda</a>
             </div>
             <div class="top-actions">
-                <a href="../auth/logout.php" class="btn btn-danger logout-button" onclick="return confirm('Yakin ingin logout?');"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="../auth/logout.php" class="btn btn-danger logout-button" data-confirm="Yakin ingin logout?"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </header>
 
@@ -226,7 +225,7 @@ foreach ($testimonials as $testimonial) {
                             <div class="form-group">
                                 <label for="image"><i class="fas fa-image"></i> Gambar Produk</label>
                                 <input type="file" id="image" name="image" accept="image/*" class="file-input" <?php echo $editProduct ? '' : 'required'; ?>>
-                                <small class="file-help">Format JPG, JPEG, PNG. Maksimal 2MB.</small>
+                                <small class="file-help">Format WebP. Maksimal 2MB.</small>
                             </div>
 
                             <?php if ($editProduct): ?>
@@ -278,7 +277,7 @@ foreach ($testimonials as $testimonial) {
                                             <td><?php echo (int) ($product['stok'] ?? 0); ?></td>
                                             <td class="table-action">
                                                 <a href="index.php?section=products&edit_id=<?php echo (int) $product['id']; ?>" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit</a>
-                                                <a href="proses.php?aksi=hapus&id=<?php echo (int) $product['id']; ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus produk ini?');"><i class="fas fa-trash"></i> Hapus</a>
+                                                <a href="proses.php?aksi=hapus&id=<?php echo (int) $product['id']; ?>" class="btn btn-danger" data-confirm="Yakin ingin menghapus produk ini?"><i class="fas fa-trash"></i> Hapus</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -363,7 +362,7 @@ foreach ($testimonials as $testimonial) {
                                             <td><?php echo date('d M Y', strtotime($testimonial['created_at'])); ?></td>
                                             <td class="action-buttons">
                                                 <a href="proses_testimoni.php?action=<?php echo $approveAction; ?>&id=<?php echo (int) $testimonial['id']; ?>" class="btn btn-secondary"><i class="fas <?php echo $approveIcon; ?>"></i> <?php echo $approveLabel; ?></a>
-                                                <a href="proses_testimoni.php?action=delete&id=<?php echo (int) $testimonial['id']; ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus testimoni ini?');"><i class="fas fa-trash"></i> Hapus</a>
+                                                <a href="proses_testimoni.php?action=delete&id=<?php echo (int) $testimonial['id']; ?>" class="btn btn-danger" data-confirm="Yakin ingin menghapus testimoni ini?"><i class="fas fa-trash"></i> Hapus</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -414,7 +413,7 @@ foreach ($testimonials as $testimonial) {
         </div>
     </div>
 
-    <script src="../js/commerce.js"></script>
+    <script src="../js/commerce.js?v=custom-confirm-v2"></script>
     <script>
         const navButtons = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('.section');
